@@ -25,8 +25,7 @@ s3_to_local_map = [
 boto3.setup_default_session(profile_name=profile_name)
 client = boto3.client('batch')
 
-
-def is_pode_continuar(jobId):
+def verifica_status_job(jobId):
     continuar = True
     while continuar:
         sleep(5)
@@ -41,6 +40,7 @@ def is_pode_continuar(jobId):
             raise Exception(f'Falha no job: {jobId}')
 
 
+
 def start_aws_batch_sync(jobName, fila_job, def_job, ):
     print(f'Startando aws batch {def_job}')
     responseJob1 = client.submit_job(
@@ -49,7 +49,7 @@ def start_aws_batch_sync(jobName, fila_job, def_job, ):
         jobDefinition=def_job
     )
     jobId = responseJob1['jobId']
-    is_pode_continuar(jobId)
+    verifica_status_job(jobId)
     print(f'Sucesso: {jobName}: {jobId}')
 
 
@@ -63,3 +63,4 @@ if __name__ == '__main__':
         os.system(sync)
 
     start_aws_batch_sync(job2, fila_job2, def_job2)
+    print(f'Fim da execução')
