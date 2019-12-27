@@ -2,24 +2,24 @@ import boto3
 import os
 from time import sleep
 
-job1 = 'awsCliJob1'
-fila_job1 = 'sensoriamento-mobile-batch-zarc-QUEUE-DEV'
-def_job1 = 'sensoriamento-mobile-batch-zarc-JOBDEF-DEV'
+job1 = 'envioDocumentosDigisin'
+fila_job1 = 'bb30-envio-documentos-digisin-backend-QUEUE-DEV'
+def_job1 = 'bb30-envio-documentos-digisin-backend-JOBDEF-DEV'
 
-job2 = 'awsCliJob2'
-fila_job2 = 'sensoriamento-mobile-batch-zarc-QUEUE-DEV'
-def_job2 = 'sensoriamento-mobile-batch-zarc-JOBDEF-DEV'
+job2 = 'webmethodoBatch'
+fila_job2 = 'envio-documentos-digisin-webmethod-client-batch-QUEUE-DEV'
+def_job2 = 'envio-documentos-digisin-webmethod-client-batch-JOBDEF-DEV'
 
-profile_name = 'dev'
+profile_name = 'NPDev'
 
 sucesso = 'SUCCE'
 falha = 'FAIL'
 
-bucket = 'dev-brasilseg-ged'
+buckets3 = 'dev-brasilseg-ged'
 
 s3_to_local_map = [
-    {'key': '/12', 'pasta_local': '/home/nova/Documents/git/digisincontrolm/files/12'},
-    {'key': '/14', 'pasta_local': '/home/nova/Documents/git/digisincontrolm/files/14'}
+    {'key': '/12', 'pasta_local': 'C:\digisin_12'},
+    {'key': '/14', 'pasta_local': 'C:\digisin_14'}
 ]
 
 boto3.setup_default_session(profile_name=profile_name)
@@ -50,7 +50,7 @@ def start_aws_batch_sync(jobName, fila_job, def_job, ):
     )
     jobId = responseJob1['jobId']
     is_pode_continuar(jobId)
-    print(f'deu certo {jobName}: {jobId}')
+    print(f'Sucesso: {jobName}: {jobId}')
 
 
 if __name__ == '__main__':
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     for map in s3_to_local_map:
         print(f'Executando copia do: {map} ')
-        sync = f'aws s3 sync s3://{bucket}{map["key"]} {map["pasta_local"]} --profile {profile_name}'
+        sync = f'aws s3 sync s3://{buckets3}{map["key"]} {map["pasta_local"]} --profile {profile_name}'
         print(sync)
         os.system(sync)
 
